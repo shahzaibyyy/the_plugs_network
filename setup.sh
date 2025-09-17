@@ -1,9 +1,11 @@
-#!/bin/zsh
+#!/bin/bash
 
 # The Plugs - Enterprise B2B Networking Platform Setup Script
-# Creates complete project structure with empty files
 
 set -e
+
+echo "🚀 The Plugs - Project Setup"
+echo "=================================="
 
 
 
@@ -149,15 +151,55 @@ mkdir -p .github/workflows
 touch .github/workflows/ci.yml .github/workflows/cd.yml
 touch .github/workflows/security-scan.yml .github/workflows/dependency-update.yml
 
-echo "✅ The Plugs project structure created successfully!"
+# Create virtual environment if it doesn't exist
+if [ ! -d "venv" ]; then
+    echo "🐍 Creating Python virtual environment..."
+    python3 -m venv venv
+    echo "✅ Virtual environment created"
+fi
+
+# Activate virtual environment
+echo "🔋 Activating virtual environment..."
+source venv/bin/activate
+
+# Upgrade pip
+echo "📦 Upgrading pip..."
+pip install --upgrade pip
+
+# Install dependencies
+if [ -f "requirements.txt" ]; then
+    echo "📥 Installing production dependencies..."
+    pip install -r requirements.txt
+fi
+
+if [ -f "requirements-dev.txt" ]; then
+    echo "🛠️  Installing development dependencies..."
+    pip install -r requirements-dev.txt
+fi
+
+# Make scripts executable
+echo "⚙️  Making scripts executable..."
+chmod +x scripts/*.sh
+
+# Create .env file if it doesn't exist
+if [ ! -f ".env" ] && [ -f ".env.example" ]; then
+    echo "📝 Creating .env file from .env.example..."
+    cp .env.example .env
+    echo "⚠️  Please edit .env file with your configuration before starting the server"
+fi
+
+echo ""
+echo "✅ The Plugs setup completed successfully!"
 echo "📁 Project location: $(pwd)"
 echo ""
-echo "Next steps:"
-echo "1. cd $PROJECT_NAME"
-echo "2. Create virtual environment: python -m venv venv"
-echo "3. Activate venv: source venv/bin/activate"
-echo "4. Install dependencies: pip install -r requirements.txt"
-echo "5. Copy .env.example to .env and configure"
-echo "6. Run: uvicorn app.main:app --reload"
+echo "🎯 Quick start:"
+echo "1. Edit .env file with your database and Redis configuration"
+echo "2. Start the development server: ./scripts/start.sh"
+echo "3. Open http://localhost:8000/docs for API documentation"
+echo ""
+echo "🛠️  Available scripts:"
+echo "- ./scripts/start.sh     - Start development server"
+echo "- ./scripts/test.sh      - Run tests"
+echo "- ./scripts/migrate.sh   - Run database migrations"
 echo ""
 echo "🚀 Happy coding with The Plugs!"

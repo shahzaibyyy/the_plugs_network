@@ -10,7 +10,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
-develop-eggs/
+develop-eggs/   
 dist/
 downloads/
 eggs/
@@ -104,12 +104,18 @@ celerybeat.pid
 
 # Environments
 .env
+.env.local
+.env.staging
+.env.production
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Keep example env file
+!.env.example
 
 # Spyder project settings
 .spyderproject
